@@ -1,62 +1,98 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## RPG Battle
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+API de jogo de RPG de turno, com escolha de class, o monstro é gerado automáticamente.
+Feito de forma simples, com calculos internos.
 
-## About Laravel
+- Crie um nick(será seu usuário para identificar batalhas)
+- Inicie uma partida selecionando o seu herói
+- Faça rodada e visualize as informações de acordo com os acontecimentos
+- Rodada finaliza, caso seja vencedor será gerado uma classificação.
+- O histórico da batalha ficará registrado
+- É possivel visualizar informações de batalhas especificas
+- Visualiza informações de batalha
+- Visualizar heróis/monstros e seus status
+- Visualizar a classificaçao
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<hr>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requerimentos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 7.3
+- MySQL/MariaDB
+- Composer
 
-## Learning Laravel
+<hr>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Instalação
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Faça um git clone de: *https://github.com/carlosedurf/rpg_battle.git*
+- Faça uma copia de .env-example
+    - Configure com a informação de seu banco de dados
+- Rode o comando: *composer install*
+- Rode o comando: *php artisan migrate --seed* **(seed poi nela esta configurada os heróis e monstros iniciais)**
+- Pronto agora é só iniciar o servidor (Seja Local do PHP ou Apache2/NginX)
 
-## Laravel Sponsors
+<hr>
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Rotas
+<br/>
 
-### Premium Partners
+### User
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
+-   (GET)     =>  /users/{user}/
+    -   Exibe Informação do usuário enviado
 
-## Contributing
+-   (GET)     =>  /users/{user}/battles
+    -   Exibe Batalhas do usuário
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+-   (POST)    =>  /users/create
+    -   Cria usuário com nick informado
+        -   (BODY)  =>  {"nick":"meu_nick"}
 
-## Code of Conduct
+<hr>
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Hero
 
-## Security Vulnerabilities
+-   (GET)       =>  /heroes
+    -   Exibe lista de heróis
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+<hr>
 
-## License
+### Monster
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+-   (GET)       =>  /monsters
+    -   Exibe lista de monstros
+
+<hr>
+
+### Classification
+
+-   (GET)       =>  /classifications
+    -   Exibe classificação
+
+<hr>
+
+### Battle
+
+-   (GET)       =>  /battles/{battle}
+    -   Exibe informação da batalha
+
+-   (GET)       =>  /battles/{battle}/history
+    -   Exibe histórico da batalha
+
+-   (POST)      =>  /battles/{battle}/round
+    -   Inicia a batalha(caso já tenha um batalha em progresso não pode iniciar outra)
+        -   (HEADER)    =>  user_id = 1     // Envia sempre o id do nick criado para vincular as batalhas
+        -   (BODY)      =>  {"hero_id":1}   // recebe o ID do herói escolhido
+
+-   (POST)      =>  /battles/start
+    -   A parte principal do sistema aqui o turnos acontecem da seguinte forma:
+        -   (HEADER)    =>  user_id = 1     // Envia sempre o id do nick criado para vincular aos passos
+        -   Primeiro passo é o iniciativa - primeira requisição é feita a soma de um 1d10 + agilidade de ambos herói/monstro o mais começa, caso empate gerasse outra requisição
+        -   Segundo passo caso ataque:  é feito uma requisição de 1d10 + agilidade + força 
+            Caso de defesa: é feito uma requisição de 1d10 + agilidade + defesa
+            Caso o ataque é maior que a defesa será feito o calculo de dano
+        -   Terceiro passo é feito o calculo de dano em uma requisição feito: com o pdd + força o resulatado irá retira o pdv do oponente e volta ao passo 1 na próxima requisição
+        -   Caso o valor de pdv chegue a zero do herói/monstro é finalizada a batalha
+        -   Caso o Herói ganhe será enviado para a tabela de classificação
+        
