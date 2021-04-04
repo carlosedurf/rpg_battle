@@ -42,4 +42,4 @@ Route::prefix('/battles')->name('battles.')->group(function (){
 Route::get('/classifications', [ClassificationController::class, 'index'])->name('classifications.index');
 
 Route::get('/heroes', [HeroController::class, 'index'])->name('heroes.index');
-Route::get('/monster', [MonsterController::class, 'index'])->name('monsters.index');
+Route::get('/monsters', [MonsterController::class, 'index'])->name('monsters.index');

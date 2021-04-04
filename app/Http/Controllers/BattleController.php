@@ -94,9 +94,6 @@ class BattleController extends Controller
                 'msg'   => 'user not linked with this battle'
             ], 400);
 
-        $this->classification($battle, $user);
-        dd('fim');
-
         if($battle->step === 'finished')
             return response()->json([
                 'error' => true,
