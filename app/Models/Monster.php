@@ -8,4 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Monster extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'class',
+        'pdv',
+        'force',
+        'defense',
+        'agility',
+        'pdd',
+    ];
+
+    public function battles()
+    {
+        return $this->hasMany(Battle::class);
+    }
+
 }

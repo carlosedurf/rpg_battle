@@ -40,4 +40,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function battles()
+    {
+        return $this->hasMany(Battle::class);
+    }
+
+    public function classification()
+    {
+        return $this->hasOne(Classification::class);
+    }
+
 }
