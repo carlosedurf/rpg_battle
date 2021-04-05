@@ -30,7 +30,7 @@ Feito de forma simples, com calculos internos.
     - Configure com a informação de seu banco de dados
 - Rode o comando: *composer install*
 - Rode o comando: *php artisan migrate --seed* **(seed poi nela esta configurada os heróis e monstros iniciais)**
-- Pronto agora é só iniciar o servidor (Seja Local do PHP ou Apache2/NginX)
+- Pronto. Agora é só iniciar o servidor (Seja Local do PHP ou Apache2/NginX)
 
 <hr>
 
@@ -80,12 +80,12 @@ Feito de forma simples, com calculos internos.
 -   (GET)       =>  /battles/{battle}/history
     -   Exibe histórico da batalha
 
--   (POST)      =>  /battles/{battle}/round
+-   (POST)      =>  /battles/start
     -   Inicia a batalha(caso já tenha um batalha em progresso não pode iniciar outra)
         -   (HEADER)    =>  user_id = 1     // Envia sempre o id do nick criado para vincular as batalhas
         -   (BODY)      =>  {"hero_id":1}   // recebe o ID do herói escolhido
 
--   (POST)      =>  /battles/start
+-   (POST)      =>  /battles/{battle}/round
     -   A parte principal do sistema aqui o turnos acontecem da seguinte forma:
         -   (HEADER)    =>  user_id = 1     // Envia sempre o id do nick criado para vincular aos passos
         -   Primeiro passo é o iniciativa - primeira requisição é feita a soma de um 1d10 + agilidade de ambos herói/monstro o mais começa, caso empate gerasse outra requisição
